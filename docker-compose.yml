@@ -1,0 +1,20 @@
+version: "3.5"
+services:
+  weatherapp-backend:
+    build: ./backend
+    container_name: weatherapp-backend
+    image: weatherapp_backend
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./backend:/usr/src/app
+  frontend:
+    build: ./frontend
+    container_name: weatherapp-frontend
+    image: weatherapp_frontend
+    environment:
+      - ENDPOINT=http://localhost:9000/api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend:/usr/src/app
