@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: weatherapp-backend
+  name: weatherapp-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weatherapp-backend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: weatherapp-backend
+    spec:
+      containers:
+      - image: gcr.io/weatherapp-370511/weatherapp-backend:v1
+        name: backend
+        imagePullPolicy: Always
+        resources: {}
+        ports:
+          - containerPort: 9000 
+status: {}
