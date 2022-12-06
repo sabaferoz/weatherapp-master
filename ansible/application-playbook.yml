@@ -20,7 +20,7 @@
     - name: Clone the github repo
       git:
        repo: https://github.com/sabaferoz/weatherapp-master.git
-       dest: /home/msaba7903/app
+       dest: /home/{{  user  }}/app
        clone: yes
        update: yes
 
@@ -31,11 +31,11 @@
   tasks:
     - name: Install frontend dependencies
       npm:
-        path: /home/msaba7903/app/frontend
+        path: /home/{{  user  }}/app/frontend
     - name: Install backend dependencies
       npm:
-        path: /home/msaba7903/app/backend
+        path: /home/{{  user  }}/app/backend
     - name: Start the application
       command:
-        chdir: /home/msaba7903/app
+        chdir: /home/{{  user  }}/app
         cmd: docker-compose up

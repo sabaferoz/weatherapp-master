@@ -10,6 +10,8 @@ The weather app shows the upcoming weather to the users.
 
 The frontend and the backend of the application contains a **Dockerfile** that can be used to build images that can be run on any environment.
 
+Before running thr application, please get an api key and update it in weatherapp-master/backend/.env file.
+
 For building and running the backend, the following commands can be used:
 
 `cd weatherapp-master/backend`
@@ -45,10 +47,9 @@ To access the application on GCP, the following url can be used:
 
 `http://34.27.38.122:8000/`
 
-
 ### Ansible
 
-The deployment process of the application can be automated using ansible and can be used to deploy the application on any remote ubuntu server.
+The deployment process of the application can be automated using ansible and can be used to deploy the application on any remote ubuntu server. Please remember to fetch and update the api key in the weatherapp-master/backend/env file before proceeding.
 
 The steps for deploying the application on any ubuntu VM from another ubuntu VM are as follows:
 
@@ -79,6 +80,8 @@ remote_test
 ansible_host=IP_ADDRESS_OF_VIRTUAL_MACHINE
 ansible_ssh_private_key_file=~/.ssh/YOUR_SSH_PRIVATE_KEY_FILE
 ansible_user=YOUR_USERNAME
+
+Update the remote user's username in app-playbook.yml file.
 
 To deploy docker onto the remote machine, execute the following commands:
 

@@ -26,5 +26,5 @@ spec:
           - containerPort: 8000 
         env:
           - name: ENDPOINT
-            value: http://34.173.48.181:9000/api
+            value: {{  ENTER BACKEND ENDPOINT HERE}}
 status: {}
