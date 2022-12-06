@@ -1,0 +1,41 @@
+---
+- name: Install node and npm
+  hosts: remote
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Update apt repo and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+    - name: Install nodejs and npm
+      apt:
+        pkg:
+          - nodejs
+          - npm
+
+- name: Clone the repository
+  hosts: remote
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Clone the github repo
+      git:
+       repo: https://github.com/sabaferoz/weatherapp-master.git
+       dest: /home/msaba7903/app
+       clone: yes
+       update: yes
+
+- name: Deploy nodejs app
+  hosts: remote
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Install frontend dependencies
+      npm:
+        path: /home/msaba7903/app/frontend
+    - name: Install backend dependencies
+      npm:
+        path: /home/msaba7903/app/backend
+    - name: Start the application
+      command:
+        chdir: /home/msaba7903/app
+        cmd: docker-compose up
