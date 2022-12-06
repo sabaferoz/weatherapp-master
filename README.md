@@ -1,89 +1,89 @@
 # Weatherapp
 
-There was a beautiful idea of building an app that would show the upcoming weather. The developers wrote a nice backend and a frontend following the latest principles and - to be honest - bells and whistles. However, the developers did not remember to add any information about the infrastructure or even setup instructions in the source code.
-
-Luckily we now have [docker compose](https://docs.docker.com/compose/) saving us from installing the tools on our computer, and making sure the app looks (and is) the same in development and in production. All we need is someone to add the few missing files!
+The weather app shows the upcoming weather to the users.
 
 ## Prerequisites
 
 * An [openweathermap](http://openweathermap.org/) API key.
 
-## Returning your solution
-
-### Via github
-
-* Make a copy of this repository in your own github account (do not fork unless you really want to be public).
-* Create a personal repository in github.
-* Make changes, commit them, and push them in your own repository.
-* Send us the url where to find the code.
-
-### Via tar-package
-
-* Clone this repository.
-* Make changes and **commit them**.
-* Create a **.tgz** -package including the **.git**-directory, but excluding the **node_modules**-directories.
-* Send us the archive.
-
-## Exercises
-
-Here are some things in different categories that you can do to make the app better. Before starting you need to get yourself an API key to make queries in the [openweathermap](http://openweathermap.org/). You can run the app locally using `npm i && npm start`.
-
 ### Docker
 
-*Docker containers are central to any modern development initiative. By knowing how to set up your application into containers and make them interact with each other, you have learned a highly useful skill.*
+The frontend and the backend of the application contains a **Dockerfile** that can be used to build images that can be run on any environment.
 
-* Add **Dockerfile**'s in the *frontend* and the *backend* directories to run them virtually on any environment having [docker](https://www.docker.com/) installed. It should work by saying e.g. `docker build -t weatherapp_backend . && docker run --rm -i -p 9000:9000 --name weatherapp_backend -t weatherapp_backend`. If it doesn't, remember to check your api key first.
-* Add a **docker-compose.yml** -file connecting the frontend and the backend, enabling running the app in a connected set of containe
-* The developers are still keen to run the app and its pipeline on their own computers. Share the development files for the container by using volumes, and make sure the containers are started with a command enabling hot reload.
+For building and running the backend, the following commands can be used:
 
-### Node and React development
+`cd weatherapp-master/backend`
 
-*Node and React applications are highly popular technologies. Understanding them will give you an advantage in front- and back-end development projects.*
+`docker build -t weatherapp_backend . && docker run --rm -i -p 9000:9000 --name weatherapp_backend -t weatherapp_backend`
 
-* The application now only reports the current weather. It should probably report the forecast e.g. a few hours from now. (tip: [openweathermap api](https://openweathermap.org/forecast5))
+For building and running the frontend, the following command can be used:
 
-* There are [eslint](http://eslint.org/) errors. Sloppy coding it seems. Please help.
+`cd weatherapp-master/frontend`
 
-* The app currently reports the weather only for location defined in the *backend*. Shouldn't it check the browser location and use that as the reference for making a forecast? (tip: [geolocation](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation))
+`docker build -t weatherapp_frontend . && docker run --rm -i -p 8000:8000 --name weatherapp_frontend -t weatherapp_frontend`
 
-### Testing
+### Docker Compose
 
-*Test automation is key in developing good quality applications. Finding bugs in early stages of development is valuable in any software development project. With Robot Framework you can create integration tests that also serve as feature descriptions, making them exceptionally useful.*
+The root directory of the application containes a **docker-compose.yml** that connects the frontend and the backend, enabling running the app in a connected set of containers.
 
-* Create automated tests for the application. (tip: [mocha](https://mochajs.org/))
+To run the application using docker compose, the following commands can be used:
 
-* Create [Robot Framework](http://robotframework.org/) integration tests. Hint: Start by creating a third container that gives expected weather data and direct the backend queries there by redefining the **MAP_ENDPOINT**.
+`cd weatherapp-master`
+
+`docker-compose up`
+
+To access the application on your browser the following url can be used:
+
+`localhost:8000`
+
 
 ### Cloud
 
-*The biggest trend of recent times is developing, deploying and hosting your applications in cloud. Knowing cloud -related technologies is essential for modern IT specialists.*
+The application has been deployed on GCP as a Kubernetes deployment. Currently, the frontend and the backend have been exposed as a loadbalancer service. However, we can also use nginx proxy in the future to send the backend requests to the proxy that redirects those requests to the backend to avoid exposing the backend.
 
-* Set up the weather service in a free cloud hosting service, e.g. [AWS](https://aws.amazon.com/free/) or [Google Cloud](https://cloud.google.com/free/).
+To access the application on GCP, the following url can be used:
+
+`http://34.27.38.122:8000/`
+
 
 ### Ansible
 
-*Automating deployment processes saves a lot of valuable time and reduces chances of costly errors. Infrastructure as Code removes manual steps and allows people to concentrate on core activities.*
+The deployment process of the application can be automated using ansible and can be used to deploy the application on any remote ubuntu server.
 
-* Write [ansible](http://docs.ansible.com/ansible/intro.html) playbooks for installing [docker](https://www.docker.com/) and the app itself.
+The steps for deploying the application on any ubuntu VM from another ubuntu VM are as follows:
 
-### Documentation
+- Install ansible
 
-*Good documentation benefits everyone.*
+`sudo apt-get update`
 
-* Remember to update the README
+`sudo apt-get install software-properties-common`
 
-* Use descriptive names and add comments in the code when necessary
+`sudo apt-add-repository --yes --update ppa:ansible/ansible`
 
-### ProTips
+`sudo apt-get install ansible`
 
-* When you are coding the application imagine that you are a freelancer developer developing an application for an important customer.
+-  Test if it's working
 
-* The app must be ready to deploy and work flawlessly.
+`ansible --version`
 
-* The app must be easy to deploy to your local machine with and without Docker. 
+- First Command
 
-* Detailed instructions to run the app should be included in your forked version because a customer would expect detailed instructions also.
+`ansible all -i localhost, --connection=local -m ping`
 
-* Structure the code and project folder structure in a modular and logical fashion for extra points.
+- To configure ansible for the remote server modify **/etc/ansible/hosts** file with the following entries:
 
-* Try to avoid any bugs or weirdness in the operating logic.
+[remote]
+remote_test
+
+[remote:vars]
+ansible_host=IP_ADDRESS_OF_VIRTUAL_MACHINE
+ansible_ssh_private_key_file=~/.ssh/YOUR_SSH_PRIVATE_KEY_FILE
+ansible_user=YOUR_USERNAME
+
+To deploy docker onto the remote machine, execute the following commands:
+
+`cd weatherapp-master/ansible/`
+
+`ansible-playbook docker-playbook.yml -l remote`
+
+`ansible-playbook app-playbook.yml -l remote`
