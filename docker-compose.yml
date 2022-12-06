@@ -3,7 +3,7 @@ services:
   weatherapp-backend:
     build: ./backend
     container_name: weatherapp-backend
-    image: weatherapp_backend
+    image: weatherapp_backend:latest
     ports:
       - "9000:9000"
     volumes:
@@ -11,7 +11,7 @@ services:
   frontend:
     build: ./frontend
     container_name: weatherapp-frontend
-    image: weatherapp_frontend
+    image: weatherapp_frontend:latest
     environment:
       - ENDPOINT=http://localhost:9000/api
     ports:

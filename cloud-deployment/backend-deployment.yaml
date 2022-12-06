@@ -18,7 +18,7 @@ spec:
         app: weatherapp-backend
     spec:
       containers:
-      - image: gcr.io/weatherapp-370511/weatherapp-backend:v1
+      - image: gcr.io/weatherapp-370511/weatherapp-backend:latest
         name: backend
         imagePullPolicy: Always
         resources: {}

@@ -18,10 +18,13 @@ spec:
         app: weatherapp-frontend
     spec:
       containers:
-      - image: gcr.io/weatherapp-370511/weatherapp-frontend:v1
+      - image: gcr.io/weatherapp-370511/weatherapp-frontend:latest
         name: frontend
         imagePullPolicy: Always
         resources: {}
         ports:
           - containerPort: 8000 
+        env:
+          - name: ENDPOINT
+            value: http://34.173.48.181:9000/api
 status: {}
